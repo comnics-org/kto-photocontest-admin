@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { withRouter, Link } from "react-router-dom";
+import React, { useEffect } from "react";
+import { withRouter } from "react-router-dom";
 
-import { PageHeader, Typography } from "antd";
+import { PageHeader } from "antd";
 import { connect } from 'react-redux'
 
 function LandingPage(props) {
-    const [authenticated, setAuthenticated] = useState(false)
 
     useEffect(() => {
     });

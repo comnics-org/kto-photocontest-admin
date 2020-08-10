@@ -1,17 +1,21 @@
 import React from "react";
 import "./App.css";
+
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
-import LandingPage from "./components/views/LandingPage/LandingPage";
-import LoginPage from "./components/views/LoginPage/LoginPage";
-import RegisterPage from "./components/views/RegisterPage/RegisterPage";
 import Auth from "./hoc/auth";
 
-import { Layout, Menu, Breadcrumb, Typography } from "antd";
+import LandingPage from "./components/views/LandingPage/LandingPage"
+import LoginPage from "./components/views/LoginPage/LoginPage"
+import RegisterPage from "./components/views/RegisterPage/RegisterPage"
+import PhotoListPage from './components/views/Photo/PhotoListPage'
+import PhotoUploadPage from './components/views/Photo/PhotoUploadPage'
+
+import { Layout, Breadcrumb, Typography } from "antd";
 
 import HeaderBasic from './components/views/Header/HeaderBasic'
 
-const { Title, Text, Link } = Typography;
+const { Text, Link } = Typography;
 const { Header, Footer, Content } = Layout;
 
 function App() {
@@ -31,11 +35,13 @@ function App() {
                             <Route exact path="/" component={Auth(LandingPage, null)} />
                             <Route exact path="/login" component={Auth(LoginPage, false)} />
                             <Route exact path="/register" component={Auth(RegisterPage, false)} />
+                            <Route exact path="/photo/list" component={Auth(PhotoListPage, true)} />
+                            <Route exact path="/photo/upload" component={Auth(PhotoUploadPage, true)} />
                         </Switch>
                     </div>
                 </Content>
                 <Footer style={{textAlign: 'center'}}>
-                    <text>Copyright OOOOO.</text>
+                    <Text>Copyright KTO 2020.</Text>
                     <Link href="http://#" target="_blank" style={{marginLeft: '10px'}}>
                         Front
                     </Link>
