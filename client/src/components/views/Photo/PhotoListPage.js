@@ -10,14 +10,18 @@ function PhotoListPage(props) {
     const [isLoading, setIsLoading] = useState(false);
 
     const [offset, setOffset] = useState(0);
+    const [orderby, setOrderby] = useState('createdAt');
+    const [orderbyOrder, setOrderbyOrder] = useState('desc');
+
     const [photos, setPhotos] = useState([]);
+
     const PAGE_LIMIT = 9;
 
     const ADMIN_PHOTO_URL = 'http://localhost:5000/api/photos/thumb';
 
-    async function getPhotoList() {
+    async function getPhotoList(pOffset, pLimit, pOrderby, pOrderbyOrder) {
         return new Promise(async (resolve, reject) => {
-            const res = await axios.get(`/api/photos?offset=${offset}&limit=${PAGE_LIMIT}`);
+            const res = await axios.get(`/api/photos?offset=${pOffset}&limit=${pLimit}&orderby=${pOrderby}&orderbyorder=${pOrderbyOrder}`);
             resolve(res.data.photos);
         });
     }
@@ -33,7 +37,7 @@ function PhotoListPage(props) {
         setIsError(false);
         setIsLoading(true);
         try {
-            const newPhotos = await getPhotoList();
+            const newPhotos = await getPhotoList(offset, PAGE_LIMIT, orderby, orderbyOrder);
             setPhotos([...photos, ...newPhotos]);
             setOffset(offset+PAGE_LIMIT);
         } catch (error) {
@@ -63,6 +67,21 @@ function PhotoListPage(props) {
         fetchPhotos();
     }, []);
 
+    const orderbyHandler = async (newOrderby) => {
+        var newOrderbyOrder = ''
+        if(orderby === newOrderby){
+            newOrderbyOrder = orderbyOrder === 'desc'?'asc':'desc'
+        }else{
+            setOrderby(newOrderby);
+            newOrderbyOrder = 'desc';
+        }
+        setOrderbyOrder(newOrderbyOrder);
+
+        const newPhotos = await getPhotoList(0, PAGE_LIMIT, newOrderby, newOrderbyOrder);
+        setOffset(PAGE_LIMIT);
+        setPhotos([...newPhotos]);
+    }
+
     const moreBtnClickHandler = () => {
         console.log("moreBtnClickHandler");
         setOffset(offset + PAGE_LIMIT);
@@ -82,6 +101,11 @@ function PhotoListPage(props) {
 
     return (
         <>
+                            <div style={{paddingTop: '5px', paddingBottom: '5px', textAlign: 'right'}}>
+                                <Button type="primary" onClick={() => orderbyHandler('createdAt')}>날짜순</Button> &nbsp;
+                                <Button type="primary" onClick={() => orderbyHandler('like_count')}>좋아요순</Button>
+                            </div>
+
             <List
                 grid={{ gutter: 16, column: 3 }}
                 dataSource={photos}
@@ -91,7 +115,7 @@ function PhotoListPage(props) {
                             {item.kind === "K" ? "KTO Uploaded Image" : "Insta Image"}
                             {item.kind === "K" ? <img src={`${ADMIN_PHOTO_URL}/${item.thumbnail_src}`} width="100%" /> : <img src={item.thumbnail_src} width="100%" />}
                             <div style={{paddingTop: '5px', textAlign: 'right'}}>
-                                <Button type="primary" danger onClick={(e) => deleteBtnClickHandler(e, item.shortcode)}>삭제</Button>
+                                Like: {item.like_count} <Button type="primary" danger onClick={(e) => deleteBtnClickHandler(e, item.shortcode)}>삭제</Button>
                             </div>
                         </Card>
                     </List.Item>

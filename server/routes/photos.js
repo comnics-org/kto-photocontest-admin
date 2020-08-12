@@ -29,8 +29,10 @@ router.use('/thumb', express.static(UPLOAD_FILE_THUMBNAIL_PATH));
 router.get('/', (req, res) => {
     const offset = req.query.offset || 0;
     const limit = req.query.limit || 9;
+    const orderby = req.query.orderby || 'createdAt';
+    const orderbyOrder = req.query.orderbyorder || 'desc';
 
-    Photo.selectPhotos(offset, limit, (err, rows) => {
+    Photo.selectPhotos(offset, limit, orderby, orderbyOrder, (err, rows) => {
         res.json({success: true, photos: rows});
     });
 });

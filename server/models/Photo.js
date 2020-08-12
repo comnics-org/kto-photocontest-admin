@@ -36,10 +36,10 @@ const Photo = {
         });
     },
 
-    selectPhotos: (offset = 0, limit = 9, cb = null) => {
+    selectPhotos: (offset = 0, limit = 9, orderby, orderbyorder, cb = null) => {
         dbPool.getConnection(async (conn) => {
             try {
-                let sql = `SELECT * FROM photos WHERE is_use = 'Y' order by createdAt desc limit ${offset}, ${limit}`;
+                let sql = `SELECT *, (select count(*) from photo_like where pl_shortcode = p.shortcode) as like_count FROM photos p WHERE is_use = 'Y' order by ${orderby} ${orderbyorder} limit ${offset}, ${limit}`;
                 let rows = await conn.query(sql);
                 conn.end();
 
