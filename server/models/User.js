@@ -74,7 +74,6 @@ const User = {
     
             bcrypt.hash(password, salt, function (err, hash) {
                 if (err) return nexr(err);
-                conn.end();
                 cb(hash);
             });
         });

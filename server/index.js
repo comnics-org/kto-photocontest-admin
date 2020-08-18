@@ -13,9 +13,11 @@ app.use(cookieParser());
 
 const usersRouter = require('./routes/users')
 const photosRouter = require('./routes/photos')
+const statisticsRouter = require('./routes/statistics')
 
 app.use('/api/users', usersRouter);
 app.use('/api/photos', photosRouter);
+app.use('/api/statistics', statisticsRouter);
 
 app.get('/', (req, res) => res.send('No No No!'))
 

@@ -4,6 +4,13 @@
   color: #fff;
 }
 
+@media screen and (max-width: 650px) {
+  .ant-layout-content{
+    padding: 0px !important;
+  }
+
+}
+
 .site-layout-content {
   background: #fff;
   padding: 24px;
