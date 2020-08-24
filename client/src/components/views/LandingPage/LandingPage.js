@@ -23,11 +23,15 @@ const columns = [
 var photoData = [{
     date: '2020-08-01',
     cnt: 100
-}];  
+}];
+var totalPhotoCount = 0;
+
 var voteData = [{
     date: '2020-08-02',
     cnt: 100
 }];
+var totalVoteCount = 0;
+
 var loading = false;
 
 function LandingPage(props) {
@@ -51,10 +55,14 @@ function LandingPage(props) {
             if(kind === PHOTO_DAILY_STATISTICS){
                 const res = await axios.get(`/api/statistics/photo`);
                 photoData = res.data.data;
+                totalPhotoCount = photoData.reduce( (acc, cur, i) => {return acc+cur.cnt;}, 0);
+                
                 resolve(res.data.data);
             }else if(kind === VOTE_DAILY_STATISTICS){
                 const res = await axios.get(`/api/statistics/vote`);
                 voteData = res.data.data;
+                totalVoteCount = voteData.reduce( (acc, cur, i) => {return acc+cur.cnt;}, 0);
+
                 resolve(res.data.data);
             }
             reject('Not exist Kind.');
@@ -66,7 +74,7 @@ function LandingPage(props) {
                 <Row>
                     <Col span={11}>
                         <div style={{ marginBottom: 16 }}>
-                            <h3>- Photo Statistics : 일자별 사진 추가 통계</h3>
+                            <h3>- Photo Statistics : 일자별 사진 추가 통계(토탈: {totalPhotoCount}건)</h3>
                             <Button type="primary" onClick={() => getStatistics(PHOTO_DAILY_STATISTICS)} loading={loading}>
                                 Reload
                             </Button>
@@ -79,7 +87,7 @@ function LandingPage(props) {
                     <Col span={2}></Col>
                     <Col span={11}>
                         <div style={{ marginBottom: 16 }}>
-                            <h3>- Vote Statistics : 일자별 투표 통계</h3>
+                            <h3>- Vote Statistics : 일자별 투표 통계(토탈: {totalVoteCount}건)</h3>
                             <Button type="primary" onClick={() => getStatistics(VOTE_DAILY_STATISTICS)} loading={loading}>
                                 Reload
                             </Button>
